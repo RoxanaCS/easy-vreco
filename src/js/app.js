@@ -3,34 +3,39 @@ $(document).ready(function() {
 });
 
 function initMap() {
+  var uluru = {lat: -25.363,
+    lng: 131.044};
   var map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: -34.397,
-      lng: 150.644},
-    zoom: 18
+    zoom: 4,
+    center: uluru
   });
-  var infoWindow = new google.maps.InfoWindow({map: map});
-
-  // Try HTML5 geolocation.
-
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function(position) {
-      var pos = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude
-      };
-      infoWindow.setPosition(pos);
-      infoWindow.setContent('Location found.');
-      map.setCenter(pos);
-    }, function() {
-      handleLocationError(true, infoWindow, map.getCenter());
-    });
-  } else {
-  // Browser doesn't support Geolocation
-    handleLocationError(false, infoWindow, map.getCenter());
+  var marker = new google.maps.Marker({
+    position: uluru,
+    map: map
+  });
+  document.getElementById('search').addEventListener('click', buscar);
+  function buscar() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        var pos = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+        map.setZoom(15);
+        map.setCenter(pos);
+        var miUbicacion = new google.maps.Marker({
+          position: pos,
+          map: map,
+          icon: 'https://image.flaticon.com/icons/png/128/145/145315.png'
+        });
+      }, function(error) {
+        alert('Tenemos un problema en encontrar tu ubicación');
+      });
+      activateSearch();
+    }
   }
-  activateSearch()
 }
-
+// función para autocompletar
 function handleLocationError(browserHasGeolocation, infoWindow, pos) {
   infoWindow.setPosition(pos);
   infoWindow.setContent(browserHasGeolocation ?
