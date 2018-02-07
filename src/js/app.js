@@ -3,8 +3,9 @@ $(document).ready(function() {
 });
 
 function initMap() {
-  var uluru = {lat: -25.363,
-    lng: 131.044};
+  activateSearch();
+  var uluru = {lat: -33,
+    lng: -71};
   var map = new google.maps.Map(document.getElementById('map'), {
     zoom: 4,
     center: uluru
@@ -26,26 +27,41 @@ function initMap() {
         var miUbicacion = new google.maps.Marker({
           position: pos,
           map: map,
-          icon: 'https://image.flaticon.com/icons/png/128/145/145315.png'
+        //  icon: 'http://gcba.github.io/iconos/Iconografia_PNG/bici.png'
         });
       }, function(error) {
         alert('Tenemos un problema en encontrar tu ubicación');
       });
-      activateSearch();
     }
   }
-}
-// función para autocompletar
-function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-  infoWindow.setPosition(pos);
-  infoWindow.setContent(browserHasGeolocation ?
-    'Error: The Geolocation service failed.' :
-    'Error: Your browser doesn\'t support geolocation.');
+  var directionsService = new google.maps.DirectionsService;
+  var directionsDisplay = new google.maps.DirectionsRenderer({map: map});
+  // directionsDisplay.setMap(map);
+  document.getElementById('trazar-ruta').addEventListener('click', trazarRuta);
+  var trazarRuta = function() {
+    calculateAndDisplayRoute(directionsService, directionsDisplay);
+  };
 }
 
+// función para autocompletar
 function activateSearch() {
   var startInput = document.getElementById('startInput');
   var destinationInput = document.getElementById('destinationInput');
   new google.maps.places.Autocomplete(startInput);
   new google.maps.places.Autocomplete(destinationInput);
 }
+
+// función para trazar ruta
+var calculateAndDisplayRoute = function(directionsService, directionsDisplay) {
+  directionsService.route({
+    origin: document.getElementById('startInput').value,
+    destination: document.getElementById('destinationInput').value,
+    travelMode: 'DRIVING'
+  }, function(response, status) {
+    if (status === 'OK') {
+      directionsDisplay.setDirections(response);
+    } else {
+      windorw.alert('No encontramos una ruta');
+    }
+  });
+};
