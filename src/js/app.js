@@ -8,16 +8,18 @@ function initMap() {
     lng: -71};
   var map = new google.maps.Map(document.getElementById('map'), {
     zoom: 4,
-    center: uluru
-  });
-  var marker = new google.maps.Marker({
-    position: uluru,
-    map: map
+    center: uluru,
   });
   var icon = {
-    url: 'http://gcba.github.io/iconos/Iconografia_PNG/bici.png',
-    scaledSize: new google.maps.Size(30, 30),
+    url: 'https://i.imgur.com/6wqDodT.png',
+    scaledSize: new google.maps.Size(25, 25),
   };
+  var marker = new google.maps.Marker({
+    position: uluru,
+    map: map,
+    animation: google.maps.Animation.DROP,
+    icon: icon
+  });
   document.getElementById('search').addEventListener('click', buscar);
   function buscar() {
     if (navigator.geolocation) {
@@ -49,6 +51,7 @@ function initMap() {
   function makeMarker(position, icon, title) {
     new google.maps.Marker({
       position: position,
+      animation: google.maps.Animation.DROP,
       map: map,
       icon: icon,
       title: title
@@ -74,7 +77,7 @@ function initMap() {
       polylineOptions: {
         strokeWeight: 6,
         strokeOpacity: 0.8,
-        strokeColor: 'orange'
+        strokeColor: '#4db6ac'
       }
     });
   };
